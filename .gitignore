@@ -1,0 +1,5 @@
+data/
+.idea/
+mlruns
+__pycache__
+model/
