@@ -5,6 +5,8 @@ import click
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import mean_squared_error
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -73,10 +75,14 @@ def train(
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
         pipeline.fit(features_train, target_train)
         accuracy = accuracy_score(target_val, pipeline.predict(features_val))
+        confusion_matrix_model = confusion_matrix(target_val, pipeline.predict(features_val))
+        mean_squared = mean_squared_error(target_val, pipeline.predict(features_val))
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
         mlflow.log_metric("accuracy", accuracy)
         click.echo(f"Accuracy: {accuracy}.")
+        click.echo(f"Confusion_matrix: {confusion_matrix_model}.")
+        click.echo(f"mean_squared_error: {mean_squared}.")
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
