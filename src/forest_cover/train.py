@@ -1,12 +1,14 @@
 from pathlib import Path
 from joblib import dump
 
+
 import click
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -77,6 +79,7 @@ def train(
         accuracy = accuracy_score(target_val, pipeline.predict(features_val))
         confusion_matrix_model = confusion_matrix(target_val, pipeline.predict(features_val))
         mean_squared = mean_squared_error(target_val, pipeline.predict(features_val))
+        scores_cross_val = cross_val_score(pipeline, features_train, target_train, cv=5)
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
@@ -84,5 +87,6 @@ def train(
         click.echo(f"Accuracy: {accuracy}.")
         click.echo(f"Confusion_matrix: {confusion_matrix_model}.")
         click.echo(f"mean_squared_error: {mean_squared}.")
+        click.echo(f"scores_cross_val: {scores_cross_val}.")
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
