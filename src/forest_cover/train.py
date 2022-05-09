@@ -1,7 +1,6 @@
 from pathlib import Path
 from joblib import dump
 
-
 import click
 import mlflow
 import mlflow.sklearn
@@ -60,19 +59,20 @@ from .pipeline import create_pipeline
     show_default=True,
 )
 def train(
-    dataset_path: Path,
-    save_model_path: Path,
-    random_state: int,
-    test_split_ratio: float,
-    use_scaler: bool,
-    max_iter: int,
-    logreg_c: float,
+        dataset_path: Path,
+        save_model_path: Path,
+        random_state: int,
+        test_split_ratio: float,
+        use_scaler: bool,
+        max_iter: int,
+        logreg_c: float,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
         random_state,
         test_split_ratio,
     )
+
     with mlflow.start_run():
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
         pipeline.fit(features_train, target_train)
@@ -84,6 +84,7 @@ def train(
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
         mlflow.log_metric("accuracy", accuracy)
+        mlflow.sklearn.log_model(pipeline, "model")
         click.echo(f"Accuracy: {accuracy}.")
         click.echo(f"Confusion_matrix: {confusion_matrix_model}.")
         click.echo(f"mean_squared_error: {mean_squared}.")
