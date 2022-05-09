@@ -85,7 +85,6 @@ def train(
         mlflow.log_param("logreg_c", logreg_c)
         mlflow.log_metric("accuracy", accuracy)
         mlflow.log_param("model_name", "LogisticRegression")
-        #mlflow.sklearn.log_model("LogisticRegression", "model")
         click.echo(f"Accuracy: {accuracy}.")
         click.echo(f"Confusion_matrix: {confusion_matrix_model}.")
         click.echo(f"mean_squared_error: {mean_squared}.")
