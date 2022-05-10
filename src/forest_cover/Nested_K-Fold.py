@@ -1,3 +1,4 @@
+from numpy import mean
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.model_selection import GridSearchCV
@@ -30,8 +31,8 @@ search = GridSearchCV(model, param_grid_forest, scoring='accuracy', n_jobs=1, cv
 cv_outer = KFold(n_splits=6, shuffle=True, random_state=1)
 accuracies = cross_val_score(search, features_train, target_train, scoring='accuracy', cv=cv_outer, n_jobs=-1)
 best_model = search.fit(features_train, target_train).best_estimator_
-print(accuracies)
+print(f'Acuracy: {mean(accuracies)}')
 f1_scores = f1_score(target_val, best_model.predict(features_val), average=None)
-print(f1_scores)
+print(f'f1_scores: {mean(f1_scores)}')
 roc_auc_scores = roc_auc_score(target_val, best_model.predict_proba(features_val), multi_class='ovr')
-print(roc_auc_scores)
+print(f'Roc_auc: {roc_auc_scores}')
