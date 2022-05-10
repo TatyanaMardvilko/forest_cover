@@ -27,6 +27,8 @@ param_grid_forest = {'n_estimators': n_estimators,
                      'min_samples_leaf': min_samples_leaf,
                      'bootstrap': bootstrap}
 
+# метрики выбраны отличные от задания 7 (но их выбрано 3), так как выбор в задании 7 уже не кажется удачным
+
 search = GridSearchCV(model, param_grid_forest, scoring='accuracy', n_jobs=1, cv=cv_inner, refit=True)
 cv_outer = KFold(n_splits=6, shuffle=True, random_state=1)
 accuracies = cross_val_score(search, features_train, target_train, scoring='accuracy', cv=cv_outer, n_jobs=-1)
