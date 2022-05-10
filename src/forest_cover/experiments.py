@@ -10,6 +10,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.decomposition import PCA
 import mlflow
 import mlflow.sklearn
+from sklearn.metrics import f1_score
 
 features_train, features_val, target_train, target_val = get_dataset(
     'd:\\maschineLearning\RS\\ml_hometask9\data\\train.csv',
@@ -49,11 +50,11 @@ param_grid_forest = {'n_estimators': n_estimators,
                      'min_samples_leaf': min_samples_leaf,
                      'bootstrap': bootstrap}
 
-# models.append(("Random Forest with GridSearch:",
-# GridSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
+models.append(("Random Forest with GridSearch:",
+GridSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
 
-# models.append(("Random Forest with RandomSearch:",
-# RandomizedSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
+models.append(("Random Forest with RandomSearch:",
+RandomizedSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
 
 exp = mlflow.create_experiment('forest')
 results = []
@@ -84,6 +85,16 @@ for i in range(len(names)):
             mlflow.log_param("max_iter", model_exp.max_iter)
             mlflow.log_param("C", model_exp.C)
             mlflow.log_param("penalty", model_exp.penalty)
+        elif "GridSearch" in names[i]:
+            mlflow.log_param("min_samples_leaf", model_exp.param_grid['min_samples_leaf'])
+            mlflow.log_param("max_depth", model_exp.param_grid['max_depth'])
+            mlflow.log_param("max_features", model_exp.param_grid['max_features'])
+            mlflow.log_param("n_estimators", model_exp.param_grid['n_estimators'])
+        elif "RandomSearch" in names[i]:
+            mlflow.log_param("min_samples_leaf", model_exp.param_distributions['min_samples_leaf'])
+            mlflow.log_param("max_depth", model_exp.param_distributions['max_depth'])
+            mlflow.log_param("max_features", model_exp.param_distributions['max_features'])
+            mlflow.log_param("n_estimators", model_exp.param_distributions['n_estimators'])
         else:
             print(names[i])
             mlflow.log_param("criterion", model_exp.criterion)
