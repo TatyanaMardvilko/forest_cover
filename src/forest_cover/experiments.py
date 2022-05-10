@@ -7,6 +7,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from src.forest_cover.data import get_dataset
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.decomposition import PCA
 
 features_train, features_val, target_train, target_val = get_dataset(
     'd:\\maschineLearning\RS\\ml_hometask9\data\\train.csv',
@@ -16,6 +17,9 @@ features_train, features_val, target_train, target_val = get_dataset(
 
 scaler = StandardScaler()
 features_tr_sc = scaler.fit_transform(features_train)
+
+pca = PCA(n_components=10)
+X_train_scaled_pca = pca.fit_transform(features_tr_sc)
 
 models = []
 
@@ -31,7 +35,7 @@ models.append(("Logistic Regression with elasticnet:",
               LogisticRegression(random_state=1, max_iter=1000, solver='saga', penalty='elasticnet', l1_ratio=0.5, C=0.01)))
 
 n_estimators = [7, 10, 15]
-max_features = ['auto', 'sqrt']
+max_features = ['sqrt']
 max_depth = [2, 7, 11]
 min_samples_split = [2, 4, 22]
 min_samples_leaf = [1, 2, 3, 4, 5, 6, 7]
@@ -51,11 +55,16 @@ models.append(("Random Forest with RandomSearch:",
 
 results = []
 names = []
+
 for name, model in models:
     kfold = KFold(n_splits=10, random_state=0, shuffle=True)
     cv_result = cross_val_score(model, features_tr_sc, target_train, cv=kfold, scoring='accuracy')
     names.append(name)
     print(name)
+    results.append(cv_result)
+    cv_result = cross_val_score(model, X_train_scaled_pca, target_train, cv=kfold, scoring='accuracy')
+    names.append(name.replace(':', ' PCA:'))
+    print(name.replace(':', ' PCA:'))
     results.append(cv_result)
 for i in range(len(names)):
     print(names[i], results[i].mean())
