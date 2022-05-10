@@ -6,7 +6,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from src.forest_cover.data import get_dataset
-import pandas as pd
+from sklearn.model_selection import RandomizedSearchCV
 
 features_train, features_val, target_train, target_val = get_dataset(
     'd:\\maschineLearning\RS\\ml_hometask9\data\\train.csv',
@@ -27,6 +27,9 @@ param_grid_log_res = {'C': np.logspace(-4, 4, 10)}
 models.append(("Logistic Regression with l1:",
               LogisticRegression(random_state=0, max_iter=1000, penalty="l1", C=0.1, solver='liblinear')))
 
+models.append(("Logistic Regression with elasticnet:",
+              LogisticRegression(random_state=1, max_iter=1000, solver='saga', penalty='elasticnet', l1_ratio=0.5, C=0.01)))
+
 n_estimators = [7, 10, 15]
 max_features = ['auto', 'sqrt']
 max_depth = [2, 7, 11]
@@ -42,6 +45,9 @@ param_grid_forest = {'n_estimators': n_estimators,
 
 models.append(("Random Forest with GridSearch:",
               GridSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
+
+models.append(("Random Forest with RandomSearch:",
+              RandomizedSearchCV(RandomForestClassifier(), param_grid_forest, cv=5, verbose=0, n_jobs=-1)))
 
 results = []
 names = []
