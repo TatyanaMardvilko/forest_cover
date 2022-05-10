@@ -28,14 +28,10 @@ param_grid_forest = {'n_estimators': n_estimators,
 
 search = GridSearchCV(model, param_grid_forest, scoring='accuracy', n_jobs=1, cv=cv_inner, refit=True)
 cv_outer = KFold(n_splits=6, shuffle=True, random_state=1)
-#accuracies = cross_val_score(search, features_train, target_train, scoring='accuracy', cv=cv_outer, n_jobs=-1)
+accuracies = cross_val_score(search, features_train, target_train, scoring='accuracy', cv=cv_outer, n_jobs=-1)
 best_model = search.fit(features_train, target_train).best_estimator_
-print(best_model)
+print(accuracies)
 f1_scores = f1_score(target_val, best_model.predict(features_val), average=None)
 print(f1_scores)
 roc_auc_scores = roc_auc_score(target_val, best_model.predict_proba(features_val), multi_class='ovr')
 print(roc_auc_scores)
-#f1_scores = cross_val_score(search, features_train, target_train, scoring='f1', cv=cv_outer, n_jobs=-1)
-#roc_auc_scores = cross_val_score(search, features_train, target_train, scoring='roc_auc', cv=cv_outer, n_jobs=-1)
-
-#print(accuracies.mean, f1_scores.mean, roc_auc_scores.mean)
