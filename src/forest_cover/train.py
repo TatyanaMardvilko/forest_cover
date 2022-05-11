@@ -59,13 +59,13 @@ from .pipeline import create_pipeline
     show_default=True,
 )
 def train(
-        dataset_path: Path,
-        save_model_path: Path,
-        random_state: int,
-        test_split_ratio: float,
-        use_scaler: bool,
-        max_iter: int,
-        logreg_c: float,
+    dataset_path: Path,
+    save_model_path: Path,
+    random_state: int,
+    test_split_ratio: float,
+    use_scaler: bool,
+    max_iter: int,
+    logreg_c: float,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -77,7 +77,9 @@ def train(
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
         pipeline.fit(features_train, target_train)
         accuracy = accuracy_score(target_val, pipeline.predict(features_val))
-        confusion_matrix_model = confusion_matrix(target_val, pipeline.predict(features_val))
+        confusion_matrix_model = confusion_matrix(
+            target_val, pipeline.predict(features_val)
+        )
         mean_squared = mean_squared_error(target_val, pipeline.predict(features_val))
         scores_cross_val = cross_val_score(pipeline, features_train, target_train, cv=5)
         mlflow.log_param("use_scaler", use_scaler)
@@ -89,7 +91,7 @@ def train(
         click.echo(f"Confusion_matrix: {confusion_matrix_model}.")
         click.echo(f"mean_squared_error: {mean_squared}.")
         click.echo(f"scores_cross_val: {scores_cross_val}.")
-        model_name = pipeline.named_steps['classifier']
+        model_name = pipeline.named_steps["classifier"]
         click.echo(f"model: {model_name}.")
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
