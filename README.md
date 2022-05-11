@@ -23,12 +23,24 @@ You can configure additional options (such as hyperparameters) in the CLI. To ge
 ```sh
 poetry run train --help
 ```
-6. Run MLflow UI to see the information about experiments you conducted:
+6. Only train use CLI. Other script such as experiments.py and Nested_K-Fold.py
+I run from PyCharm.
+```sh
+open Edit Configuration in upper part of window PyCharm
+add Name
+add Script Path
+run
+```
+all result you see in PyCharm console
+8. Run MLflow UI to see the information about experiments you conducted:
 ```sh
 poetry run mlflow ui
 ```
 
+
+
 ## Development
+The code in this repository must be formatted with black, and pass mypy typechecking before being commited to the repository.
 
 Install all requirements (including dev requirements) to poetry environment:
 ```
@@ -38,3 +50,20 @@ Now you can use developer instruments, e.g. pytest:
 ```
 poetry run pytest
 ```
+Install black. I use
+```
+pip install git+https://github.com/psf/black
+```
+To start black
+```
+black {path of project}
+```
+Install  flake8. 
+```
+pip install flake8
+```
+To start flake8
+```
+flake8  {path of project}
+```
+
