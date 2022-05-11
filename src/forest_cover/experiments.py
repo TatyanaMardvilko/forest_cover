@@ -8,9 +8,7 @@ from sklearn.model_selection import KFold
 from src.forest_cover.data import get_dataset
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.decomposition import PCA
-import mlflow
 import mlflow.sklearn
-from sklearn.metrics import f1_score
 
 features_train, features_val, target_train, target_val = get_dataset(
     "d:\\maschineLearning\RS\\ml_hometask9\data\\train.csv",
@@ -40,8 +38,9 @@ models.append(
     )
 )
 
-# models.append(("Logistic Regression with elasticnet:",
-# LogisticRegression(random_state=1, max_iter=1000, solver='saga', penalty='elasticnet', l1_ratio=0.5, C=0.01)))
+models.append(("Logistic Regression with elasticnet:",
+               LogisticRegression(random_state=1, max_iter=1000, solver='saga',
+                                  penalty='elasticnet', l1_ratio=0.5, C=0.01)))
 
 n_estimators = [7, 10, 15]
 max_features = ["sqrt"]

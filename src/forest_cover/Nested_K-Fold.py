@@ -29,7 +29,8 @@ param_grid_forest = {
     "bootstrap": bootstrap,
 }
 
-# метрики выбраны отличные от задания 7 (но их выбрано 3), так как выбор в задании 7 уже не кажется удачным
+# метрики выбраны отличные от задания 7 (но их выбрано 3),
+# так как выбор в задании 7 уже не кажется удачным
 
 search = GridSearchCV(
     model, param_grid_forest, scoring="accuracy", n_jobs=1, cv=cv_inner, refit=True
